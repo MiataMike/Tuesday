@@ -35,14 +35,39 @@
 
 int PicConfig(void) {
 
-    TimerConfig();
+    Timer1Config();
+    Timer2Config();
     LedConfig();
     DacConfig();
+
     return 0;
 }
 
-int TimerConfig()
+int Timer1Config()
 {
+    //T1 config, see page 218
+    T1CONbits.TON = 1;     //turn on timer
+    T1CONbits.TSIDL = 0;   // continues to run in idle mode
+    T1CONbits.TCS = 0;     // use 4MHz internal clock
+    T1CONbits.TCKPS = 0b11;// sets prescale, 256/64/8/1
+    //IEC0bits.T1IE = 1;     // enable interrupt                polling for now
+    //IPC0bits.T1IP = 0b001; //interrupt priority 1 (lowest)
+    return 0;
+}
+
+int Timer2Config()
+{
+    // see page 222
+    T2CONbits.T32 = 1;     //32 bit timer mode
+    T2CONbits.TSIDL = 0;   // runs in idle
+    T2CONbits.TCS = 0;     //use 4MHz internal clock
+    T2CONbits.TCKPS = 0b11;// sets prescale, 256/64/8/1
+
+    //set interrupt
+    IEC0bits.T2IE = 1; //enable interrupt
+    IPC1bits.T2IP = 0b001; //interrupt priority 1 (lowest)
+    
+    T2CONbits.TON = 1; //turn on        
     return 0;
 }
 

@@ -4,13 +4,13 @@ Tool Name:
   c:\program files (x86)\microchip\xc16\v1.41\bin\bin\..\bin/elf-ld.exe
 
 Command:
-  -TC:\\Users\\MTurner\\AppData\\Local\\Temp\\tmp00004764.00 \
-  -TC:\\Users\\MTurner\\AppData\\Local\\Temp\\tmp00004764.01 \
-  -TC:\\Users\\MTurner\\AppData\\Local\\Temp\\tmp00004764.02 \
-  -TC:\\Users\\MTurner\\AppData\\Local\\Temp\\tmp00004764.03 \
-  -TC:\\Users\\MTurner\\AppData\\Local\\Temp\\tmp00004764.04 \
-  -TC:\\Users\\MTurner\\AppData\\Local\\Temp\\tmp00004764.05 \
-  -TC:\\Users\\MTurner\\AppData\\Local\\Temp\\tmp00004764.06 \
+  -TC:\\Users\\MTurner\\AppData\\Local\\Temp\\tmp000021e4.00 \
+  -TC:\\Users\\MTurner\\AppData\\Local\\Temp\\tmp000021e4.01 \
+  -TC:\\Users\\MTurner\\AppData\\Local\\Temp\\tmp000021e4.02 \
+  -TC:\\Users\\MTurner\\AppData\\Local\\Temp\\tmp000021e4.03 \
+  -TC:\\Users\\MTurner\\AppData\\Local\\Temp\\tmp000021e4.04 \
+  -TC:\\Users\\MTurner\\AppData\\Local\\Temp\\tmp000021e4.05 \
+  -TC:\\Users\\MTurner\\AppData\\Local\\Temp\\tmp000021e4.06 \
   -p24FJ128GC006 \
   --mdfp=C:/Programming/Microchip/MPLABX/v5.30/packs/Microchip/PIC24F-GC_DFP/1.1.16/xc16 \
   -o \
@@ -26,6 +26,7 @@ Command:
   -Lc:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../support/dsPIC33E/gld \
   -Lc:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../support/dsPIC33F/gld \
   build/default/debug/newmainXC16.o \
+  build/default/debug/PicConfig.o \
   --local-stack \
   --defsym=__MPLAB_BUILD=1 \
   --defsym=__MPLAB_DEBUG=1 \
@@ -76,9 +77,10 @@ Default Scalar Model: Small
 section                    address   length (PC units)   length (bytes) (dec)
 -------                    -------   -----------------   --------------------
 .text                        0x200               0x10a           0x18f  (399)
-.text                        0x30a                 0x8             0xc  (12)
+.text                        0x30a                0x86            0xc9  (201)
+.dinit                       0x390                 0x8             0xc  (12)
 
-                 Total "program" memory used (bytes):          0x19b  (411) <1%
+                 Total "program" memory used (bytes):          0x264  (612) <1%
 
 
 "data" Memory  [Origin = 0x800, Length = 0x2000]
@@ -92,8 +94,9 @@ reserve_data_0x820           0x820                 0x2             0x2  (2)
 reserve_data_0x822           0x822                 0x2             0x2  (2)
 reserve_data_0x824           0x824                 0x4             0x4  (4)
 reserve_data_0x82a           0x82a                0x26            0x26  (38)
+.nbss                        0x850                   0             0x4  (4)
 
-                 Total "data" memory used (bytes):           0x4e  (78) <1%
+                 Total "data" memory used (bytes):           0x52  (82) 1%
 
 
 Dynamic Memory Usage
@@ -101,30 +104,50 @@ Dynamic Memory Usage
 region                     address                      maximum length  (dec)
 ------                     -------                      ---------------------
 heap                             0                                   0  (0)
-stack                        0x850                              0x1fb0  (8112)
+stack                        0x854                              0x1fac  (8108)
 
-                 Maximum dynamic memory (bytes):         0x1fb0  (8112)
+                 Maximum dynamic memory (bytes):         0x1fac  (8108)
 
 Note: Project is using a large data memory model when small data memory model is sufficient.
 
+
+External Symbols in Data Memory (by address):
+
+                    0x0850                  _i
+
+External Symbols in Data Memory (by name):
+
+                    0x0850                  _i
 
 External Symbols in Program Memory (by address):
 
                   0x000200                  __resetPRI
                   0x00023c                  __psv_init
-                  0x000252                  __data_init
                   0x000252                  __data_init_da
+                  0x000252                  __data_init
                   0x000304                  __DefaultInterrupt
-                  0x00030a                  _main
+                  0x00030a                  _PicConfig
+                  0x00031a                  _Timer1Config
+                  0x000330                  _Timer2Config
+                  0x000354                  _LedConfig
+                  0x00035c                  _DacConfig
+                  0x000364                  _main
+                  0x000370                  _blocking_read_pin
 
 External Symbols in Program Memory (by name):
 
+                  0x00035c                  _DacConfig
+                  0x000354                  _LedConfig
+                  0x00030a                  _PicConfig
+                  0x00031a                  _Timer1Config
+                  0x000330                  _Timer2Config
                   0x000304                  __DefaultInterrupt
                   0x000252                  __data_init
                   0x000252                  __data_init_da
                   0x00023c                  __psv_init
                   0x000200                  __resetPRI
-                  0x00030a                  _main
+                  0x000370                  _blocking_read_pin
+                  0x000364                  _main
 
 Memory Configuration
 
@@ -179,6 +202,7 @@ reserve_data_0x82a
                     0x0850                  . = 0x26
  *fill*             0x082a         0x2600
 LOAD build/default/debug/newmainXC16.o
+LOAD build/default/debug/PicConfig.o
                     0x0001                  __MPLAB_BUILD = 0x1
                     0x0001                  __MPLAB_DEBUG = 0x1
                     0x0001                  __DEBUG = 0x1
@@ -243,22 +267,31 @@ __CONFIG1
 .comment
  *(.comment)
 
-.debug_info       0x000000        0x12a
+.debug_info       0x000000        0xad4
  *(.debug_info)
- .debug_info      0x000000        0x12a build/default/debug/newmainXC16.o
+ .debug_info      0x000000        0x208 build/default/debug/newmainXC16.o
+ .debug_info      0x000208        0x8cc build/default/debug/PicConfig.o
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev     0x000000         0x36
+.debug_abbrev     0x000000        0x18b
  *(.debug_abbrev)
- .debug_abbrev    0x000000         0x36 build/default/debug/newmainXC16.o
+ .debug_abbrev    0x000000         0xd5 build/default/debug/newmainXC16.o
+ .debug_abbrev    0x0000d5         0xb6 build/default/debug/PicConfig.o
 
-.debug_line       0x000000         0x3c
+.debug_line       0x000000        0x23a
  *(.debug_line)
- .debug_line      0x000000         0x3c build/default/debug/newmainXC16.o
+ .debug_line      0x000000        0x115 build/default/debug/newmainXC16.o
+ .debug_line      0x000115        0x125 build/default/debug/PicConfig.o
 
-.debug_frame      0x000000         0x30
+.debug_frame      0x000000         0xec
  *(.debug_frame)
- .debug_frame     0x000000         0x30 build/default/debug/newmainXC16.o
+ .debug_frame     0x000000         0x4c build/default/debug/newmainXC16.o
+ .debug_frame     0x00004c         0xa0 build/default/debug/PicConfig.o
+
+.debug_str        0x000000         0x38
+ *(.debug_str)
+ .debug_str       0x000000         0x12 build/default/debug/newmainXC16.o
+ .debug_str       0x000012         0x26 build/default/debug/PicConfig.o
 
 .debug_loc
  *(.debug_loc)
@@ -267,18 +300,22 @@ __CONFIG1
  *(.debug_macinfo)
 
 .debug_pubnames
-                  0x000000         0x1b
+                  0x000000         0x95
  *(.debug_pubnames)
  .debug_pubnames
-                  0x000000         0x1b build/default/debug/newmainXC16.o
+                  0x000000         0x37 build/default/debug/newmainXC16.o
+ .debug_pubnames
+                  0x000037         0x5e build/default/debug/PicConfig.o
 
 .debug_ranges
  *(.debug_ranges)
 
-.debug_aranges    0x000000         0x18
+.debug_aranges    0x000000         0x30
  *(.debug_aranges)
  .debug_aranges
                   0x000000         0x18 build/default/debug/newmainXC16.o
+ .debug_aranges
+                  0x000018         0x18 build/default/debug/PicConfig.o
                     0x0000                  WREG0 = 0x0
                     0x0000                  _WREG0 = 0x0
                     0x0002                  WREG1 = 0x2
@@ -1995,21 +2032,55 @@ LOAD c:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\liblega-c-elf
 END GROUP
 OUTPUT(dist/default/debug/Tuesday.X.debug.elf elf32-pic30)
 LOAD default_isr
+LOAD data_init
 
 .debug_pubtypes
-                  0x000018         0x12
+                  0x000030         0xb6
  .debug_pubtypes
-                  0x000018         0x12 build/default/debug/newmainXC16.o
+                  0x000030         0x1f build/default/debug/newmainXC16.o
+ .debug_pubtypes
+                  0x00004f         0x97 build/default/debug/PicConfig.o
 
 __c30_signature
-                  0x00002a         0x12
+                  0x0000e6         0x18
  __c30_signature
-                  0x00002a          0x6 build/default/debug/newmainXC16.o
+                  0x0000e6          0x6 build/default/debug/newmainXC16.o
  __c30_signature
-                  0x000030          0x6 c:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\liblega-pic30-elf.a(crt0_extended24.o)
+                  0x0000ec          0x6 build/default/debug/PicConfig.o
  __c30_signature
-                  0x000036          0x6 c:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\liblega-pic30-elf.a(data_init_24.o)
+                  0x0000f2          0x6 c:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\liblega-pic30-elf.a(crt0_extended24.o)
+ __c30_signature
+                  0x0000f8          0x6 c:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\liblega-pic30-elf.a(data_init_24.o)
 
-.text             0x00030a          0x8
- .text            0x00030a          0x8 build/default/debug/newmainXC16.o
-                  0x00030a                  _main
+.nbss               0x0850          0x4
+ .nbss              0x0850          0x4 build/default/debug/newmainXC16.o
+                    0x0850                  _i
+
+.config_JTAGEN    0x0157fe          0x2
+ .config_JTAGEN
+                  0x0157fe          0x2 build/default/debug/PicConfig.o
+
+.config_IESO      0x0157fc          0x2
+ .config_IESO     0x0157fc          0x2 build/default/debug/PicConfig.o
+
+.config_WPEND     0x0157fa          0x2
+ .config_WPEND    0x0157fa          0x2 build/default/debug/PicConfig.o
+
+.config_IOL1WAY
+                  0x0157f8          0x2
+ .config_IOL1WAY
+                  0x0157f8          0x2 build/default/debug/PicConfig.o
+
+.text             0x00030a         0x86
+ .text            0x00030a         0x5a build/default/debug/PicConfig.o
+                  0x00030a                  _PicConfig
+                  0x00031a                  _Timer1Config
+                  0x000330                  _Timer2Config
+                  0x000354                  _LedConfig
+                  0x00035c                  _DacConfig
+ .text            0x000364         0x2c build/default/debug/newmainXC16.o
+                  0x000364                  _main
+                  0x000370                  _blocking_read_pin
+
+.dinit            0x000390          0x8
+ .dinit           0x000390          0x8 data_init

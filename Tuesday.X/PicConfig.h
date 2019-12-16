@@ -19,7 +19,8 @@
 // TODO Insert declarations
 
 int PicConfig(void);
-int TimerConfig(void);
+int Timer1Config(void);
+int Timer2Config(void);
 int LedConfig(void);
 int DacConfig(void);
 
