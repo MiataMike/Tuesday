@@ -64,7 +64,7 @@ int Timer2Config()
 {
     // see page 222
     T2CONbits.T32 = 1;     //32 bit timer mode
-    T2CONbits.TSIDL = 1;   // runs in idle
+    T2CONbits.TSIDL = 0;   // runs in idle
     T2CONbits.TCS = 0;     //use 4MHz internal clock
     T2CONbits.TCKPS = 0b11;// sets prescale, 256/64/8/1
 
@@ -74,8 +74,8 @@ int Timer2Config()
     IPC1bits.T2IP = 0b011; //interrupt priority 3 (1 is lowest)
     
     //load values
-    PR3 = sec2clk(40) >> 16; // gets upper bytes of period (in clock cycles)
-    PR2 = sec2clk(40) & 0xFF; // gets lower bytes
+    PR3 = sec2clk(10) >> 16; // gets upper bytes of period (in clock cycles)
+    PR2 = sec2clk(10) & 0xFF; // gets lower bytes
     TMR3 = 0;
     TMR2 = 0; //reset timer
     T2CONbits.TON = 1; //turn on        
@@ -84,18 +84,26 @@ int Timer2Config()
 
 int LedConfig()
 {
+    TRISBbits.TRISB14 = 0; // configures pin as digital output
+    ANSBbits.ANSB14 = 0;  
     return 0;
 }
 
 int DacConfig()
 {
+    TRISGbits.TRISG9 = 1; // configures as analog output
+    ANSGbits.ANSG9 = 1; 
+    DAC1CONbits.DACSIDL = 1; // doesnt operates in idle 
+    DAC1CONbits.DACFM = 0; // left justified
+    DAC1CONbits.DACREF = 0b10; //3.3v output
+    DAC1CONbits.DACEN = 1; //enable
     return 0;
 }
 
 long sec2clk(float seconds)
 {
     long clocks = 0;
-    clocks = seconds * 4000000;
+    clocks = seconds * 16000000; // checked with stopwatch, needs multiplied by 4
     clocks /= 256; // 4MHz clock rate with 256 prescaler
     return clocks;
 }

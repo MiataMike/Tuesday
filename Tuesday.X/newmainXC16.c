@@ -25,13 +25,14 @@ int main(void) {
     
     while(1)
     {
-        blocking_read_pin(1,sec2clk(.2));
-        blocking_read_pin(2,sec2clk(.2));
+        DAC1DAT = 512;
+        blocking_read_pin(0,sec2clk(1)); //warning, setting to ~ 2 sec will overflow buffer
+        blocking_read_pin(1,sec2clk(1));
         //idle
-
         TMR2 = 0; //reset sleep timer
         TMR3 = 0;
-        DeepSleep();
+        DAC1DAT = 1023;
+        Idle();
         i++;
     }
     return 0;
@@ -40,6 +41,16 @@ int main(void) {
 int blocking_read_pin(int pin, long capture_time)
 {
     static int reading = 0;
+    
+    switch(pin)
+    {
+        case 0: LATBbits.LATB14 = 0; // switch select gets written low
+            break;
+        case 1: LATBbits.LATB14 = 1; 
+            break;
+        default: LATBbits.LATB14 = 1;
+    }
+    
     TMR1 = 0; //reset timer
     while(TMR1 < capture_time)
     {
@@ -58,11 +69,4 @@ void __attribute__((interrupt,no_auto_psv)) _T3Interrupt(void)
         IFS0bits.T2IF = 0; // clear interrupt flags
         IFS0bits.T3IF = 0;
     }
-}
-
-inline void DeepSleep(void)
-{
-    DSCONbits.DSEN = 1; // this must be repeated for safety reasons
-    DSCONbits.DSEN = 1;
-    asm volatile("pwrsav #0");
 }
