@@ -21,9 +21,10 @@
 int PicConfig(void);
 int Timer1Config(void);
 int Timer2Config(void);
-int LedConfig(void);
+int SwConfig(void);
 int DacConfig(void);
 long sec2clk(float seconds);
+int PowerDownConfig(void);
 
 #ifdef	__cplusplus
 extern "C" {
